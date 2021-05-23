@@ -54,6 +54,8 @@ typedef struct
 
 Block block[12];
 
+int aliveBlock = 12;
+
 int point[100][2];
 int num = 0;
 
@@ -86,6 +88,7 @@ double Combination(int n, int k);
 int Factorial(int k);
 double Bernstein(int n, int k, double time);
 void Gameover_Check();
+void GameFinish_Check();
 // ----------------------------
 
 
@@ -247,8 +250,9 @@ void RenderScene()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	Gameover_Check();
+	GameFinish_Check();
 
-	if (!isGameOver)
+	if (!isGameOver && aliveBlock > 0)
 		Collision_Check();
 
 	// Moving Ball
@@ -283,6 +287,26 @@ void Gameover_Check()
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'O');
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'S');
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'E');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, '!');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, '!');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, '!');
+}
+
+void GameFinish_Check()
+{
+	if (aliveBlock > 0)
+		return;
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glRasterPos2f(20, 450);
+
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'Y');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'O');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'U');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, ' ');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'W');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'I');
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, 'N');
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, '!');
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, '!');
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, '!');
@@ -361,6 +385,7 @@ void Collision_Check()
 				&& ball.cx + ball_radius >= x1 && ball.cx - ball_radius <= x2) // 해당 공의 x축이 벽돌 위에 있는지 체크
 			{
 				block[i].isAlive = false;
+				aliveBlock--;
 				ball.y_velocity = -ball.y_velocity;
 				break;
 			}
@@ -380,6 +405,7 @@ void Collision_Check()
 				&& ball.cx + ball_radius >= x1 && ball.cx - ball_radius <= x2) // 해당 공의 x축이 벽돌 아래에 있는지 체크
 			{
 				block[i].isAlive = false;
+				aliveBlock--;
 				ball.y_velocity = -ball.y_velocity;
 				break;
 			}
@@ -399,6 +425,7 @@ void Collision_Check()
 				&& ball.cy + ball_radius >= y1 && ball.cy - ball_radius <= y2) // 해당 공의 x축이 벽돌 왼쪽에 있는지 체크
 			{
 				block[i].isAlive = false;
+				aliveBlock--;
 				ball.x_velocity = -ball.x_velocity;
 				break;
 			}
@@ -418,6 +445,7 @@ void Collision_Check()
 				&& ball.cy + ball_radius >= y1 && ball.cy - ball_radius <= y2) // 해당 공의 x축이 벽돌 오른쪽에 있는지 체크
 			{
 				block[i].isAlive = false;
+				aliveBlock--;
 				ball.x_velocity = -ball.x_velocity;
 				break;
 			}
